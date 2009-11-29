@@ -1,0 +1,191 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[      5487,        182]
+NotebookOptionsPosition[      4832,        155]
+NotebookOutlinePosition[      5172,        170]
+CellTagsIndexPosition[      5129,        167]
+WindowFrame->Normal
+ContainsDynamic->False*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"Clear", "[", 
+  RowBox[{"nth", ",", "r", ",", "probSTV"}], "]"}]], "Input",
+ CellChangeTimes->{{3.450411600515625*^9, 3.450411628171875*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"probSTV", "[", "n_", "]"}], "=", 
+   RowBox[{
+    FractionBox[
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"nth", "^", "2"}], " ", "*", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"1", "+", "nth"}], ")"}], "^", "2"}]}], "-", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"2", "*", "nth"}], "+", "1"}], ")"}], "^", "2"}], "*", 
+          RowBox[{
+           RowBox[{"Sinh", "[", "r", "]"}], "^", "2"}], "*", 
+          RowBox[{
+           RowBox[{"Cosh", "[", "r", "]"}], "^", "2"}]}]}], "]"}], ")"}], "^",
+       "n"}], 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"1", "+", "nth"}], ")"}], "^", "2"}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"2", "*", "nth"}], "+", "1"}], ")"}], "*", 
+         RowBox[{
+          RowBox[{"Sinh", "[", "r", "]"}], "^", "2"}]}]}], ")"}], "^", 
+      RowBox[{"(", 
+       RowBox[{"n", "+", 
+        RowBox[{"1", "/", "2"}]}], ")"}]}]], "*", 
+    RowBox[{"LegendreP", "[", 
+     RowBox[{"n", ",", 
+      FractionBox[
+       RowBox[{"nth", "*", 
+        RowBox[{"(", 
+         RowBox[{"1", "+", "nth"}], ")"}]}], 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"nth", "^", "2"}], " ", "*", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"1", "+", "nth"}], ")"}], "^", "2"}]}], "-", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"2", "*", "nth"}], "+", "1"}], ")"}], "^", "2"}], "*", 
+          RowBox[{
+           RowBox[{"Sinh", "[", "r", "]"}], "^", "2"}], "*", 
+          RowBox[{
+           RowBox[{"Cosh", "[", "r", "]"}], "^", "2"}]}]}], "]"}]]}], 
+     "]"}]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.45041164240625*^9, 3.45041165503125*^9}, {
+   3.450411689171875*^9, 3.450411862203125*^9}, {3.4504119158125*^9, 
+   3.450411963953125*^9}, 3.450412029140625*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  UnderoverscriptBox["\[Sum]", 
+   RowBox[{"n", "=", "0"}], "\[Infinity]"], 
+  RowBox[{"probSTV", "[", "n", "]"}]}]], "Input",
+ CellChangeTimes->{{3.4504122400625*^9, 3.450412274390625*^9}}],
+
+Cell[BoxData[
+ RowBox[{"0.9999999999999999`", "\[InvisibleSpace]", "+", 
+  RowBox[{"0.`", " ", "\[ImaginaryI]"}]}]], "Output",
+ CellChangeTimes->{{3.450412268953125*^9, 3.45041241803125*^9}, {
+  3.450412810953125*^9, 3.450412816453125*^9}}]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"nth", "=", "0.2"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"r", "=", "0.3"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.450412034140625*^9, 3.4504120474375*^9}, {
+  3.450412164703125*^9, 3.4504122235*^9}, {3.450412321234375*^9, 
+  3.450412412140625*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"probSTV", "[", "2", "]"}]], "Input",
+ CellChangeTimes->{{3.45041205046875*^9, 3.450412063*^9}}],
+
+Cell[BoxData["0.050817006553494894`"], "Output",
+ CellChangeTimes->{{3.450412057734375*^9, 3.45041206353125*^9}, {
+   3.4504121841875*^9, 3.450412226859375*^9}, 3.45041241809375*^9, 
+   3.450412811*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"probSTV", "[", "n", "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"n", ",", "0", ",", "5"}], "}"}]}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.450412117265625*^9, 3.450412150171875*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[
+  {Hue[0.67, 0.6, 0.6], 
+   PointBox[{{1., 0.7981312016102653}, {2., 0.12202086776229976`}, {3., 
+    0.050817006553494894`}, {4., 0.01760314718483836}, {5., 
+    0.006890462573118507}, {6., 0.0027019887039338316`}}]},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  PlotRange->Automatic,
+  PlotRangeClipping->True]], "Output",
+ CellChangeTimes->{{3.450412158765625*^9, 3.450412226875*^9}, 
+   3.450412418109375*^9, 3.45041281103125*^9}]
+}, Open  ]]
+},
+WindowSize->{1672, 933},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (June 19, 2007)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[568, 21, 165, 3, 31, "Input"],
+Cell[736, 26, 2120, 65, 47, "Input"],
+Cell[CellGroupData[{
+Cell[2881, 95, 214, 5, 52, "Input"],
+Cell[3098, 102, 240, 4, 30, "Output"]
+}, Open  ]],
+Cell[3353, 109, 300, 7, 52, "Input"],
+Cell[CellGroupData[{
+Cell[3678, 120, 119, 2, 31, "Input"],
+Cell[3800, 124, 202, 3, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4039, 132, 280, 7, 31, "Input"],
+Cell[4322, 141, 494, 11, 241, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

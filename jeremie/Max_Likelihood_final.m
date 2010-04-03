@@ -9,16 +9,22 @@ disp('* Frequency filtering program *')
 disp('*******************************')
 disp('')
 % Prompts user for the sampling frequency in MHz (Ms/s).
-Fs = 1000000*input('Sampling frequency (Ms/s) ?');
+%Fs = 1000000*input('Sampling frequency (Ms/s) ?');
+Fs = 1000000*100;
+
 % Loads the squeezing data.
-sqz = load ('sqzfinal.txt'); % N.B: data MUST be a numpt*1 list, that is data must be in one column !!!
-numpt = size(sqz,1);
-NfftPt=numpt; % Number of points used for fft
+load data.txt
+
+phase = data(:,2)*2*pi/360;
+
+sqz = data(:,1);
+number_of_points = size(sqz,1);
+NfftPt=number_of_points; % Number of points used for fft
 % Loads the shot noise data
-shot = load ('shotfinal.txt'); % N.B: data MUST be a numpt*1 array, that is data must be in one column !!!
+shot = data(:,3); % N.B: data MUST be a number_of_points*1 array, that is data must be in one column !!!
 
 % Starts the filtering program for the sqz
-time = 0:(1/Fs):((NfftPt-1)/Fs);
+%time = 0:(1/Fs):((NfftPt-1)/Fs);
 % plot(time,sqz)
 % title('Signal photocurrent')
 % xlabel('Time (s)')
@@ -26,22 +32,24 @@ time = 0:(1/Fs):((NfftPt-1)/Fs);
 % Computes the FFT
 FFTsqz = fft(sqz,NfftPt);
 Psqz = FFTsqz.*conj(FFTsqz)/NfftPt;
-freq = (0:Fs/NfftPt:Fs/2);
+%freq = (0:Fs/NfftPt:Fs/2);
 disp('Data ranging from 0 to')
 disp(Fs/(2000000))
 disp('MHz')
 disp(' ')
 % Asks user for low cut and high cut frequencies
-lowCutFreq=1000*input('Low cut filter frequency ? (kHz)  ');
-highCutFreq=1000000*input('High cut filter frequency ? (MHz)  ');
+%lowCutFreq=1000*input('Low cut filter frequency ? (kHz)  ');
+lowCutFreq=1000*100;
+%highCutFreq=1000000*input('High cut filter frequency ? (MHz)  ');
+highCutFreq=1000000*3;
 lowCutPt=fix(lowCutFreq/(Fs/NfftPt));
 highCutPt=fix(highCutFreq/(Fs/NfftPt));
 % Replaces filtered frequencies by 0;
-if (lowCutPt>0) & (lowCutPt<((NfftPt/2)+1))
+if (lowCutPt>0) && (lowCutPt<((NfftPt/2)+1))
     FFTsqz(1:lowCutPt)=0;
     FFTsqz(NfftPt-lowCutPt+1:NfftPt)=0;
 end;
-if (highCutPt>0) & (highCutPt<((NfftPt/2)+1))
+if (highCutPt>0) && (highCutPt<((NfftPt/2)+1))
     FFTsqz(highCutPt:(NfftPt-highCutPt))=0;
 end;
 % N.B: another way instead of putting 0 for the FFT values would be to
@@ -73,11 +81,11 @@ freq = (0:Fs/NfftPt:Fs/2);
 lowCutPt=fix(lowCutFreq/(Fs/NfftPt));
 highCutPt=fix(highCutFreq/(Fs/NfftPt));
 % Replaces filtered frequencies by 0;
-if (lowCutPt>0) & (lowCutPt<((NfftPt/2)+1))
+if (lowCutPt>0) && (lowCutPt<((NfftPt/2)+1))
     FFTshot(1:lowCutPt)=0;
     FFTshot(NfftPt-lowCutPt+1:NfftPt)=0;
 end;
-if (highCutPt>0) & (highCutPt<((NfftPt/2)+1))
+if (highCutPt>0) && (highCutPt<((NfftPt/2)+1))
     FFTshot(highCutPt:(NfftPt-highCutPt))=0;
 end;
 % N.B: another way instead of putting 0 for the FFT values would be to
@@ -106,15 +114,15 @@ numPhotons = 10; % max number of photons used for the calculation
 % values of HERMITE(m,x) and Laguerre(m,alpha,x) for m = 0 to 10. It increases program speed by a
 % factor of 4, useful when treating large data.
 % Prompt the user for the desired number of bins
-%disp('There are '), disp(numpt), disp(' points in the data.')
+%disp('There are '), disp(number_of_points), disp(' points in the data.')
 %numBin = input('Number of bins ? (multiple of 4) ');
 numBin=100;
 % Plots the shot noise
 plot(shot)
-pause
+%pause
 % Plots the sqz
 plot(sqz)
-pause
+%pause
 % The mean of the shot noise (corresponding to
 % the mean of electronics noise) is substracted to the sqz. The SQL
 % given by the standard deviation of the shot noise is used to normalize
@@ -125,10 +133,10 @@ shotVar=var((shot-zero)/(SQL*sqrt(2.0)));
 dataSQZ=((sqz-zero)/(SQL*sqrt(2.0)));
 %clear sqz shot SQL
 % Defines the marginal distribution. In order to do this, the vector of
-% data is cut into numBin bins of approximately numpt/numBin points. The
+% data is cut into numBin bins of approximately number_of_points/numBin points. The
 % output is an array of size numBin x sizeBin in which each column is a
 % marginal distribution. 
-sizeBin = fix(numpt/numBin);
+sizeBin = fix(number_of_points/numBin);
 for j=1:numBin
    Pm(:,j)=(dataSQZ(sizeBin*(j-1)+1:sizeBin*j,1));
 end
@@ -136,21 +144,15 @@ clear j
 % For each of the marginal distribution (say for each of the columns 
 % of the arrays of marginal distributions) it computes the variance. The 
 % plot of the variances as a function of the bins is evaluated.
+noise = zeros(1,numBin);
 for k=1:numBin
-noise(k)=var(Pm(:,k));
+    noise(k)=var(Pm(:,k));  
 end
 clear k
 %plot(noise,'.')
 %pause
 plot(10*log10(noise/0.5))
-pause
-% Prompts the user for the positions of the mins
-posMinIni1 = input('Position of first min ?   ');
-posMinIni2 = input('Position of second min ?  ');
-% Associate an angle to each point
-DeltaPhi=pi*numBin/(abs(posMinIni2-posMinIni1)*2*pi);
-angle=0:1:(numpt-1);
-angle=angle'*DeltaPhi*2*pi/(numpt-1);
+
 % Starting density matrix in the Fock basis
 rho = eye(numPhotons+1)/(numPhotons+1);
 % Number of iterations
@@ -159,12 +161,13 @@ numIt = 100;
 % lnL : likelihood logarithm
 % rho is rotated at each iteration and lnL is diplayed
 % when lnL is stationnary, the iterations can be stopped
-data(:,1)=angle;
+
+data(:,1)=phase;
 data(:,2)=dataSQZ;
 % Calcul des numPhotons fonctions d'ondes une bonne fois pour toutes
 wave_function = get_harmonic_oscillator_wave_functionsV(numPhotons,data);
-clear data; % on n'a plus besoin des données car c'est dans wave_function maintenant
-pr=real(dot(wave_function, rho*wave_function)); % calcul des probabilités p(theta_i,x_i) d'un seul coup !
+clear data; % on n'a plus besoin des donnï¿½es car c'est dans wave_function maintenant
+pr=real(dot(wave_function, rho*wave_function)); % calcul des probabilitï¿½s p(theta_i,x_i) d'un seul coup !
 lnL= sum(log(pr)); % calcul du log de vraisemblance
 disp(' ')
 disp('lnL initial = '), disp(lnL)
@@ -173,12 +176,15 @@ for m=1:numIt
     %sum(sum((rho-(R*rho*R/trace(R*rho*R)))/norm(rho)))
     rho=R*rho*R; % calcul de rho'
     rho=rho/trace(rho);
-    pr=real(dot(wave_function, rho*wave_function)); % calcul des probabilités p(theta_i,x_i) avec le nouveau rho'
+    pr=real(dot(wave_function, rho*wave_function)); % calcul des probabilitï¿½s p(theta_i,x_i) avec le nouveau rho'
     disp('lnL iteration number'), disp(m)
     %temp=lnL;
     lnL= sum(log(pr)); % calcul du log de vraisemblance avec le nouveau rho'
     %(lnL-temp)/temp
     disp(lnL)
+    if (mod(m,5) == 0)
+        save lnL.mat lnL;
+    end
 end;
 clear pr
 % Some checks
@@ -186,11 +192,11 @@ disp('Check that rho is hermitic, that is the value below (rho dagger - rho) is 
 disp('')
 normHrho=norm((rho'-rho),inf);
 disp(normHrho)
-pause
+%pause
 disp('Check that rho''s eigenvalues (real part) are semi-definite positive')
 lambdarho=real(eig(rho));
 disp(lambdarho)
-pause
+%pause
 % Results
 % Computes the diagonal values of rho = probabilities of having 0, 1, 2, ...
 % photons
@@ -230,11 +236,12 @@ disp(antidB)
 % experiment (*)
 plotx=(0:numPhotons);
 plot(plotx,probaPhotons,'*',plotx,ProbSTV(numPhotons,ropt,nopt), 'o')
-pause
+%pause
 % 3-D Graph of the Wigner function
 numPtGraph = input('Number of disivions on each axis of the Wigner graph ?   ');
 maxXWig = input('Horizontal axes ranging from -a to a; a = ?   ');
 [XWig,YWig] = meshgrid([-maxXWig:(2*maxXWig/numPtGraph):maxXWig]);
+PlotWig = zeros(numPtGraph+1, numPtGraph+1);
 for k1=1:(numPtGraph+1)
     for k2=1:(numPtGraph+1)
     PlotWig(k1,k2)=Wigner(numPhotons,rho,XWig(k1,k2),YWig(k1,k2));
